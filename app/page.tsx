@@ -1,5 +1,6 @@
+import Link from 'next/link'
 
-export default function Home() {
+export default function Login() {
   return (
     <main className="flex min-h-screen flex-col items-center p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
@@ -37,6 +38,8 @@ export default function Home() {
         </div>
 
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Login</button>
+
+        <Link href="/home" className="text-sm text-gray-700 underline">Login</Link>
       </div>
     </main>
   )
