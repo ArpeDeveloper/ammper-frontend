@@ -36,7 +36,7 @@ const options: Highcharts.Options = {
   }]
 };
 
-async function getData(): Promise<Payment[]> {
+function getData(): Payment[] {
   // Fetch data from your API here.
   return [
     {
@@ -45,7 +45,12 @@ async function getData(): Promise<Payment[]> {
       status: "pending",
       email: "m@example.com",
     },
-    // ...
+    {
+      id: "728edf52f",
+      amount: 200,
+      status: "pending",
+      email: "m@example.com",
+    },
   ]
 }
 
