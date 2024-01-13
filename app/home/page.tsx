@@ -60,20 +60,20 @@ export default function Home() {
     return (
       <main className="grid gap-4 grid-cols-1 md:grid-cols-5 text-black p-8">
         <div className="px-14 col-span-2" >
-          <Carousel >
-            <CarouselContent>
+          <Carousel className="h-60 ">
+            <CarouselContent className="h-60 ">
               {Array.from({ length: 5 }).map((_, index) => (
-                <CarouselItem key={index}>
-                    <Card>
-                      <CardContent className="flex aspect-[2/1] items-center justify-center p-6">
+                <CarouselItem className="h-60 grid " key={index}>
+                    <Card className="place-self-center	 w-11/12 shadow-md rounded-xl flex aspect-[2/1] bg-gradient-to-r from-orange-100 from-5% to-orange-600 to-95%">
+                      <CardContent className="flex items-center justify-center p-6 ">
                         <span className="text-4xl font-semibold">{index + 1}</span>
                       </CardContent>
                     </Card>
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            <CarouselPrevious className="shadow-md hover:bg-orange-300 hover:text-white hover:border-none" />
+            <CarouselNext className="shadow-md hover:bg-orange-300 hover:text-white hover:border-none" />
           </Carousel>
 
           <Separator className="my-4" />
