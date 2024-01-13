@@ -49,9 +49,9 @@ async function getData(): Promise<Payment[]> {
   ]
 }
 
-export default async function Home() {
+export default function Home() {
     const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
-    const data = await getData()
+    const data = getData()
     return (
       <main className="grid gap-4 grid-cols-1 md:grid-cols-5 text-black p-8">
         <div className="px-14 col-span-2" >
