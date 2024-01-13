@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react" 
+import React, { useRef } from "react" 
 import { Card, CardContent } from "@/components/ui/card"
 import {
   Carousel,
@@ -18,6 +18,23 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import Highcharts from 'highcharts'
+import HighchartsExporting from 'highcharts/modules/exporting'
+import HighchartsReact from 'highcharts-react-official'
+
+if (typeof Highcharts === 'object') {
+    HighchartsExporting(Highcharts)
+}
+
+const options: Highcharts.Options = {
+  title: {
+      text: 'My chart'
+  },
+  series: [{
+      type: 'line',
+      data: [1, 2, 3]
+  }]
+};
 
 async function getData(): Promise<Payment[]> {
   // Fetch data from your API here.
@@ -33,6 +50,7 @@ async function getData(): Promise<Payment[]> {
 }
 
 export default async function Home() {
+    const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
     const data = await getData()
     return (
       <main className="grid gap-4 grid-cols-1 md:grid-cols-5 text-black p-8">
@@ -64,7 +82,13 @@ export default async function Home() {
             <AccordionItem value="item-1">
               <AccordionTrigger>Is it accessible?</AccordionTrigger>
               <AccordionContent>
-                Yes. It adheres to the WAI-ARIA design pattern.
+                
+                <HighchartsReact
+                  highcharts={Highcharts}
+                  options={options}
+                  ref={chartComponentRef}
+                />
+
               </AccordionContent>
             </AccordionItem>
           </Accordion>
