@@ -21,6 +21,10 @@ import {
 import Highcharts from 'highcharts'
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
+import { ApiLink } from "@/lib/services/links"
+import { ApiAccounts } from "@/lib/services/accounts"
+
+
 
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts)
@@ -55,6 +59,8 @@ function getData(): Payment[] {
 }
 
 export default function Home() {
+    const apiLink = ApiLink()
+    const apiAccounts = ApiAccounts(apiLink.linkId ? apiLink.linkId : '')
     const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
     const data = getData()
     return (

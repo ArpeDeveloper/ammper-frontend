@@ -6,7 +6,7 @@ import { useRouter, usePathname } from 'next/navigation'
 export const ApiLink = () => {
     const router = useRouter()
     const pathname = usePathname()
-    const [linkId, setLinkId] = useState(null)
+    const [linkId, setLinkId] = useState(window.localStorage.getItem('linkId'))
     const [errors, setErrors] = useState([])
     const [status, setStatus] = useState(null)
 
@@ -29,6 +29,7 @@ export const ApiLink = () => {
         axios
             .post('api/links/', props)
             .then(response => {
+                window.localStorage.setItem('linkId', response.data.id)
                 setLinkId(response.data.id)
                 mutate()
             })
@@ -47,7 +48,6 @@ export const ApiLink = () => {
     }
 
     useEffect(() => {
-        console.log(pathname)
         if (pathname =='/' && typeof data != "undefined") router.push('home')
         
         if (pathname !='/' && error) destroyLink()
@@ -55,6 +55,7 @@ export const ApiLink = () => {
 
     return {
         data,
+        linkId,
         createLink,
         destroyLink,
     }
