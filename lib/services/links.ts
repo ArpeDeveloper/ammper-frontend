@@ -1,10 +1,11 @@
 import useSWR from 'swr'
 import axios from '@/lib/axios'
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 
 export const ApiLink = () => {
     const router = useRouter()
+    const pathname = usePathname()
     const [linkId, setLinkId] = useState(null)
     const [errors, setErrors] = useState([])
     const [status, setStatus] = useState(null)
@@ -42,15 +43,14 @@ export const ApiLink = () => {
         if (!error) {
             await axios.delete('/api/links/' + linkId +'/').then(() => mutate())
         }
-
-        window.location.pathname = '/'
+        router.push('/')
     }
 
     useEffect(() => {
-        console.log(window.location.pathname)
-        if (window.location.pathname =='/' && typeof data != "undefined") router.push('home')
+        console.log(pathname)
+        if (pathname =='/' && typeof data != "undefined") router.push('home')
         
-        if (window.location.pathname !='/' && error) destroyLink()
+        if (pathname !='/' && error) destroyLink()
     }, [data, error])
 
     return {
