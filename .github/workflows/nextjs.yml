@@ -76,9 +76,9 @@ jobs:
       - name: Build with Next.js
         run: |
           touch .env.local
-          echo NEXT_PUBLIC_BELVO_SECRET_ID=${{ secrets.NEXT_PUBLIC_BELVO_SECRET_ID }} >> .env.local
-          echo NEXT_PUBLIC_BELVO_SECRET_PASSWORD=${{ secrets.NEXT_PUBLIC_BELVO_SECRET_PASSWORD }} >> .env.local
-          echo NEXT_PUBLIC_BELVO_BASE_URL=${{ secrets.NEXT_PUBLIC_BELVO_BASE_URL }} >> .env.local
+          echo "NEXT_PUBLIC_BELVO_SECRET_ID=${{ secrets.NEXT_PUBLIC_BELVO_SECRET_ID }}" >> .env.local
+          echo "NEXT_PUBLIC_BELVO_SECRET_PASSWORD=${{ secrets.NEXT_PUBLIC_BELVO_SECRET_PASSWORD }}" >> .env.local
+          echo "NEXT_PUBLIC_BELVO_BASE_URL=${{ secrets.NEXT_PUBLIC_BELVO_BASE_URL }}" >> .env.local
           ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
