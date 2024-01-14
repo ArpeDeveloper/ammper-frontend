@@ -47,8 +47,9 @@ export const ApiLink = () => {
     }
 
     useEffect(() => {
-        if (window.location.pathname =='/' && typeof data != "undefined") router.push('home')
         console.log('window.location.pathname')
+        if (window.location.pathname =='/' && typeof data != "undefined") router.push('home')
+        
         if (window.location.pathname !='/' && error) destroyLink()
     }, [data, error])
 
