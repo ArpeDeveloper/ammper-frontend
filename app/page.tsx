@@ -13,6 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { ApiLink } from "@/lib/services/links"
 
 let isLoading = false
  
@@ -20,24 +21,33 @@ const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
-  password: z.string().min(8, {
-    message: "Password must be at least 8 characters.",
+  password: z.string().min(3, {
+    message: "Password must be at least 3 characters.",
   }),
 })
 
 export default function Login() {
+  const { createLink } = ApiLink()
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
-      password: "",
+      username: "bnk100",
+      password: "full",
     },
   })
  
   function onSubmit(values: z.infer<typeof formSchema>) {
     isLoading = true
-    console.log(values)
+    
+    const data = {
+        institution: "erebor_mx_retail",
+        username: values.username,
+        password: values.password,
+        external_id: "security-testing",
+        access_mode: "single"
+    }
+    createLink(data).finally(() => { isLoading = false})
   }
 
   return (
