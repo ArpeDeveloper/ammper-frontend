@@ -16,7 +16,7 @@ export const ApiLink = () => {
             .then(res => res.data)
             .catch(error => {
                 throw error
-            }) : {data: undefined, error: true, mutate: function(){}}
+            }) : undefined
     ) 
 
     
