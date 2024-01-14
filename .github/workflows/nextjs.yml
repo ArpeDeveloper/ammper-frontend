@@ -73,13 +73,18 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
-      - name: Build with Next.js
+      - name: Set Environment Variables
+        env:
+          BELVO_SECRET_ID: ${{ secrets.NEXT_PUBLIC_BELVO_SECRET_ID }}
+          BELVO_SECRET_PASSWORD: ${{ secrets.NEXT_PUBLIC_BELVO_SECRET_PASSWORD }}
+          BELVO_BASE_URL: ${{ secrets.NEXT_PUBLIC_BELVO_BASE_URL }}
         run: |
-          touch .env.local
-          echo "NEXT_PUBLIC_BELVO_SECRET_ID=${{ secrets.NEXT_PUBLIC_BELVO_SECRET_ID }}" >> .env.local
-          echo "NEXT_PUBLIC_BELVO_SECRET_PASSWORD=${{ secrets.NEXT_PUBLIC_BELVO_SECRET_PASSWORD }}" >> .env.local
-          echo "NEXT_PUBLIC_BELVO_BASE_URL=${{ secrets.NEXT_PUBLIC_BELVO_BASE_URL }}" >> .env.local
-          ${{ steps.detect-package-manager.outputs.runner }} next build
+          echo "" > .env.local
+          echo NEXT_PUBLIC_BELVO_SECRET_ID=$BELVO_SECRET_ID >> .env.local
+          echo NEXT_PUBLIC_BELVO_SECRET_PASSWORD=$BELVO_SECRET_PASSWORD >> .env.local
+          echo NEXT_PUBLIC_BELVO_BASE_URL=$BELVO_BASE_URL >> .env.local
+      - name: Build with Next.js
+        run: ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
