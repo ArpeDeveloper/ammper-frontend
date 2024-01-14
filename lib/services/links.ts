@@ -10,14 +10,14 @@ export const ApiLink = () => {
     const [errors, setErrors] = useState([])
     const [status, setStatus] = useState(null)
 
-    const {data, error, mutate} = useSWR('api/links/' + linkId + '/', () =>
+    const {data, error, mutate} = linkId ? useSWR('api/links/' + linkId + '/', () =>
         axios
             .get('api/links/' + linkId + '/')
             .then(res => res.data)
             .catch(error => {
                 throw error
             }),
-    )
+    ) : {data: undefined, error: true, mutate: function(){}}
 
     
     const createLink = async ({...props }) => {
