@@ -9,6 +9,7 @@ export const ApiLink = (link: string | null) => {
     const pathname = usePathname()
     const [linkId, setLinkId] = useState<string | null>(link)
     const [errors, setErrors] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
 
     const {data, error, mutate} =  useSWR('api/links/' + linkId + '/', () => linkId ?
         axios
@@ -23,7 +24,7 @@ export const ApiLink = (link: string | null) => {
     const createLink = async ({...props }) => {
 
         setErrors([])
-
+        setIsLoading(true)
         axios
             .post('api/links/', props)
             .then(response => {
@@ -48,11 +49,13 @@ export const ApiLink = (link: string | null) => {
         if (pathname =='/' && typeof data != "undefined") {
             window.localStorage.setItem('linkId', data.id)
             router.push('home')
+            setIsLoading(false)
         }
 
         if (pathname =='/' && linkId) {
             window.localStorage.setItem('linkId', linkId)
             router.push('home')
+            setIsLoading(false)
         }
         
         if ((pathname !='/' && error) || (pathname !='/' && !linkId)) destroyLink()
@@ -62,6 +65,7 @@ export const ApiLink = (link: string | null) => {
         data,
         linkId,
         errors,
+        isLoading,
         createLink,
         destroyLink,
     }
