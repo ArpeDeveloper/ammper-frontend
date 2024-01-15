@@ -86,6 +86,7 @@ export function DataTable<TData, TValue>({
         </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <Button
+          className="shadow-md hover:bg-orange-300 hover:text-white hover:border-none"
           variant="outline"
           size="sm"
           onClick={() => table.previousPage()}
@@ -94,6 +95,7 @@ export function DataTable<TData, TValue>({
           Previous
         </Button>
         <Button
+          className="shadow-md hover:bg-orange-300 hover:text-white hover:border-none"
           variant="outline"
           size="sm"
           onClick={() => table.nextPage()}
