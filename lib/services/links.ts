@@ -23,13 +23,11 @@ export const ApiLink = (link: string | null) => {
     const createLink = async ({...props }) => {
 
         setErrors([])
-        setLinkId(null)
 
         axios
             .post('api/links/', props)
             .then(response => {
                 setLinkId(response.data.id)
-                mutate()
             })
             .catch(error => {
                 if (error.response.status !== 422) throw error
@@ -39,22 +37,26 @@ export const ApiLink = (link: string | null) => {
     }
 
     const destroyLink = async () => {
-        if (!error) {
+        if (!error && linkId) {
             await axios.delete('/api/links/' + linkId +'/').then(() => mutate())
         }
         router.push('/')
     }
 
     useEffect(() => {
-        setLinkId(window.localStorage.getItem('linkId'))
         
         if (pathname =='/' && typeof data != "undefined") {
             window.localStorage.setItem('linkId', data.id)
             router.push('home')
         }
+
+        if (pathname =='/' && linkId) {
+            window.localStorage.setItem('linkId', linkId)
+            router.push('home')
+        }
         
-        if (pathname !='/' && error) destroyLink()
-    })
+        if ((pathname !='/' && error) || (pathname !='/' && !linkId)) destroyLink()
+    }, [data, linkId])
 
     return {
         data,
