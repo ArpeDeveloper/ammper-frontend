@@ -22,7 +22,7 @@ export const ApiTransactions = (linkId: String, accountId: String, dateFrom: Str
 
     useEffect(() => {
         mutate()
-    }, [linkId, accountId])
+    }, [linkId, accountId, mutate])
 
 
     return {
