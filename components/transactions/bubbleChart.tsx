@@ -85,7 +85,7 @@ export function BubbleChart(data: any) {
                 name: g,
                 color: g == "PROCESSED" ? "green" : "orange",
                 data: groups[g].map( (_: any) => {
-                        const date2 = new Date(_.accounting_date.substr(0,_.accounting_date.indexOf('T')))
+                        const date2 = new Date(_.accounting_date.substring(0,_.accounting_date.indexOf('T')))
                         return {
                             x: date2.getTime(),
                             y: _.amount,

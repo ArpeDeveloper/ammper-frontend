@@ -10,7 +10,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import { Separator } from "@/components/ui/separator"
-import { Payment, columns } from "@/components/transactions/columns"
+import { columns } from "@/components/transactions/columns"
 import { DataTable } from "@/components/transactions/transactionsTable"
 import {
   Accordion,
