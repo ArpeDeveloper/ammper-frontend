@@ -55,7 +55,6 @@ export function BubbleChart(data: any) {
     options.series = [{
         type: "bubble",
         colorKey: 'status',
-        //data: [{x:2, y:198, z:198, status:'PENDING'}]
         data: data.data.map( (_: any) => {
             const date2 = new Date(_.accounting_date.substr(0,_.accounting_date.indexOf('T')))
             return {

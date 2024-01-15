@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useRef, useState } from "react" 
+import React, { useEffect, useState } from "react" 
 import { Card, CardContent } from "@/components/ui/card"
 import {
   Carousel,
@@ -24,23 +24,15 @@ import { ApiAccounts } from "@/lib/services/accounts"
 import { ApiTransactions } from "@/lib/services/transactions"
 import { BubbleChart } from "@/components/transactions/bubbleChart"
 
+const linkId = window.localStorage.getItem('linkId')
+
 export default function Home() {
-    const [accountId, setAccountId] = useState('')
     const [dateFrom, setDateFrom] = useState('2023-12-01')
     const [dateTo, setDateTo] = useState('2024-01-14')
-    const [transactions, setTransactions] = useState([])
-    const apiLink = ApiLink()
-    const apiAccounts = ApiAccounts(apiLink.linkId ? apiLink.linkId : '')
-    const apiTransactions = ApiTransactions(apiLink.linkId ? apiLink.linkId : '', accountId, dateFrom, dateTo)
+    const apiLink = ApiLink(linkId)
+    let apiAccounts = ApiAccounts(apiLink.linkId ? apiLink.linkId : '')
+    const apiTransactions = ApiTransactions(apiLink.linkId ? apiLink.linkId : '', apiAccounts.data?.find(Boolean)?.id, dateFrom, dateTo)
     
-    useEffect(() => {
-      setAccountId(apiAccounts.data?.find(Boolean)?.id)
-    }, [apiAccounts.data])
-    useEffect(() => {
-      const data = apiTransactions.data ? apiTransactions.data : []
-      setTransactions( data)
-    
-  }, [apiTransactions.data])
     return (
       <main className="grid gap-4 grid-cols-1 md:grid-cols-5 text-black p-8">
         <div className="px-14 col-span-2" >
@@ -62,7 +54,7 @@ export default function Home() {
 
           <Separator className="my-4" />
 
-          <DataTable columns={columns} data={transactions} />
+          <DataTable columns={columns} data={apiTransactions.data ? apiTransactions.data : []} />
         </div>
         
         <div className="col-span-3 flex">
@@ -71,7 +63,7 @@ export default function Home() {
             <AccordionItem value="item-1">
               <AccordionTrigger>Is it accessible?</AccordionTrigger>
               <AccordionContent>
-                  <BubbleChart data={transactions}></BubbleChart>
+                  <BubbleChart data={apiTransactions.data ? apiTransactions.data : []}></BubbleChart>
               </AccordionContent>
             </AccordionItem>
           </Accordion>

@@ -1,16 +1,14 @@
-'use client'
 
 import useSWR from 'swr'
 import axios from '@/lib/axios'
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 
-export const ApiLink = () => {
+export const ApiLink = (link: string | null) => {
     const router = useRouter()
     const pathname = usePathname()
-    const [linkId, setLinkId] = useState(window.localStorage.getItem('linkId'))
+    const [linkId, setLinkId] = useState<string | null>(link)
     const [errors, setErrors] = useState([])
-    const [status, setStatus] = useState(null)
 
     const {data, error, mutate} =  useSWR('api/links/' + linkId + '/', () => linkId ?
         axios
@@ -25,13 +23,11 @@ export const ApiLink = () => {
     const createLink = async ({...props }) => {
 
         setErrors([])
-        setStatus(null)
         setLinkId(null)
 
         axios
             .post('api/links/', props)
             .then(response => {
-                window.localStorage.setItem('linkId', response.data.id)
                 setLinkId(response.data.id)
                 mutate()
             })
@@ -50,7 +46,12 @@ export const ApiLink = () => {
     }
 
     useEffect(() => {
-        if (pathname =='/' && typeof data != "undefined") router.push('home')
+        setLinkId(window.localStorage.getItem('linkId'))
+        
+        if (pathname =='/' && typeof data != "undefined") {
+            window.localStorage.setItem('linkId', data.id)
+            router.push('home')
+        }
         
         if (pathname !='/' && error) destroyLink()
     })
@@ -58,6 +59,7 @@ export const ApiLink = () => {
     return {
         data,
         linkId,
+        errors,
         createLink,
         destroyLink,
     }
