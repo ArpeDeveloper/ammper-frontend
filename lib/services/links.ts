@@ -53,7 +53,7 @@ export const ApiLink = () => {
         if (pathname =='/' && typeof data != "undefined") router.push('home')
         
         if (pathname !='/' && error) destroyLink()
-    }, [])
+    })
 
     return {
         data,
