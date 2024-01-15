@@ -2,13 +2,13 @@
 
 import More from 'highcharts/highcharts-more'
 import Highcharts from 'highcharts'
-More(Highcharts)
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
 import { useRef } from 'react'
 
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts)
+    More(Highcharts)
 }
 
 const options: Highcharts.Options = {
