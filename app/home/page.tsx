@@ -23,6 +23,7 @@ import { ApiLink } from "@/lib/services/links"
 import { ApiAccounts } from "@/lib/services/accounts"
 import { ApiTransactions } from "@/lib/services/transactions"
 import { BubbleChart } from "@/components/transactions/bubbleChart"
+import Loading from "./loading"
 
 export default function Home() {
     let linkId = null
@@ -38,6 +39,9 @@ export default function Home() {
     return (
       <main className="grid gap-4 grid-cols-1 md:grid-cols-5 text-black p-8">
         <div className="px-14 col-span-2" >
+
+        {
+        apiAccounts.data ? (
           <Carousel className="h-60 ">
             <CarouselContent className="h-60 ">
               {apiAccounts.data?.map((_: any, index: number) => (
@@ -53,10 +57,17 @@ export default function Home() {
             <CarouselPrevious className="shadow-md hover:bg-orange-300 hover:text-white hover:border-none" />
             <CarouselNext className="shadow-md hover:bg-orange-300 hover:text-white hover:border-none" />
           </Carousel>
+        ) :
+         (<div className="h-60 "><Loading textLoading="Loading accounts..." /></div>)
+        }
 
           <Separator className="my-4" />
 
-          <DataTable columns={columns} data={apiTransactions.data ? apiTransactions.data : []} />
+          {
+            apiTransactions.data ? 
+            (<DataTable columns={columns} data={apiTransactions.data ? apiTransactions.data : []} />)
+            : (<div className="h-full "><Loading textLoading="Loading transactions..." /></div>)
+          }
         </div>
         
         <div className="col-span-3 flex">
@@ -65,7 +76,12 @@ export default function Home() {
             <AccordionItem value="item-1">
               <AccordionTrigger>Dispersion Chart</AccordionTrigger>
               <AccordionContent>
-                  <BubbleChart data={apiTransactions.data ? apiTransactions.data : []}></BubbleChart>
+                {
+                  apiTransactions.data ? 
+                  (<BubbleChart data={apiTransactions.data ? apiTransactions.data : []}></BubbleChart>)
+                  : (<div className="h-60 "><Loading textLoading="Loading chart..." /></div>)
+                }
+                  
               </AccordionContent>
             </AccordionItem>
           </Accordion>
