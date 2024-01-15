@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useRef } from "react" 
+import React, { useEffect, useRef, useState } from "react" 
 import { Card, CardContent } from "@/components/ui/card"
 import {
   Carousel,
@@ -18,61 +18,39 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import Highcharts from 'highcharts'
-import HighchartsExporting from 'highcharts/modules/exporting'
-import HighchartsReact from 'highcharts-react-official'
+
 import { ApiLink } from "@/lib/services/links"
 import { ApiAccounts } from "@/lib/services/accounts"
-
-
-
-if (typeof Highcharts === 'object') {
-    HighchartsExporting(Highcharts)
-}
-
-const options: Highcharts.Options = {
-  title: {
-      text: 'My chart'
-  },
-  series: [{
-      type: 'line',
-      data: [1, 2, 3]
-  }]
-};
-
-function getData(): Payment[] {
-  // Fetch data from your API here.
-  return [
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-    },
-    {
-      id: "728edf52f",
-      amount: 200,
-      status: "pending",
-      email: "m@example.com",
-    },
-  ]
-}
+import { ApiTransactions } from "@/lib/services/transactions"
+import { BubbleChart } from "@/components/transactions/bubbleChart"
 
 export default function Home() {
+    const [accountId, setAccountId] = useState('')
+    const [dateFrom, setDateFrom] = useState('2023-12-01')
+    const [dateTo, setDateTo] = useState('2024-01-14')
+    const [transactions, setTransactions] = useState([])
     const apiLink = ApiLink()
     const apiAccounts = ApiAccounts(apiLink.linkId ? apiLink.linkId : '')
-    const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
-    const data = getData()
+    const apiTransactions = ApiTransactions(apiLink.linkId ? apiLink.linkId : '', accountId, dateFrom, dateTo)
+    
+    useEffect(() => {
+      setAccountId(apiAccounts.data?.find(Boolean)?.id)
+    }, [apiAccounts.data])
+    useEffect(() => {
+      const data = apiTransactions.data ? apiTransactions.data : []
+      setTransactions( data)
+    
+  }, [apiTransactions.data])
     return (
       <main className="grid gap-4 grid-cols-1 md:grid-cols-5 text-black p-8">
         <div className="px-14 col-span-2" >
           <Carousel className="h-60 ">
             <CarouselContent className="h-60 ">
-              {Array.from({ length: 5 }).map((_, index) => (
+              {apiAccounts.data?.map((_: any, index: number) => (
                 <CarouselItem className="h-60 grid " key={index}>
                     <Card className="place-self-center	 w-11/12 shadow-md rounded-xl flex aspect-[2/1] bg-gradient-to-r from-orange-100 from-5% to-orange-600 to-95%">
-                      <CardContent className="flex items-center justify-center p-6 ">
-                        <span className="text-4xl font-semibold">{index + 1}</span>
+                      <CardContent className="flex p-6 ">
+                        <span className="text-sm font-semibold">${_.balance.available?.toLocaleString()}</span>
                       </CardContent>
                     </Card>
                 </CarouselItem>
@@ -84,7 +62,7 @@ export default function Home() {
 
           <Separator className="my-4" />
 
-          <DataTable columns={columns} data={data} />
+          <DataTable columns={columns} data={transactions} />
         </div>
         
         <div className="col-span-3 flex">
@@ -93,13 +71,7 @@ export default function Home() {
             <AccordionItem value="item-1">
               <AccordionTrigger>Is it accessible?</AccordionTrigger>
               <AccordionContent>
-                
-                <HighchartsReact
-                  highcharts={Highcharts}
-                  options={options}
-                  ref={chartComponentRef}
-                />
-
+                  <BubbleChart data={transactions}></BubbleChart>
               </AccordionContent>
             </AccordionItem>
           </Accordion>
