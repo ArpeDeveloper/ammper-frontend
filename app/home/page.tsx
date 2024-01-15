@@ -30,8 +30,8 @@ export default function Home() {
     if (typeof window !== 'undefined') {
       linkId = window.localStorage.getItem('linkId')
     }
-    const [dateFrom, setDateFrom] = useState('2023-12-01')
-    const [dateTo, setDateTo] = useState('2024-01-14')
+    const [dateFrom, setDateFrom] = useState('2023-11-01')
+    const [dateTo, setDateTo] = useState('2024-01-15')
     const apiLink = ApiLink(linkId)
     let apiAccounts = ApiAccounts(apiLink.linkId ? apiLink.linkId : '')
     const apiTransactions = ApiTransactions(apiLink.linkId ? apiLink.linkId : '', apiAccounts.data?.find(Boolean)?.id, dateFrom, dateTo)
