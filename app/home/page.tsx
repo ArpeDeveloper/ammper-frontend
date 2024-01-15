@@ -66,8 +66,14 @@ export default function Home() {
               {apiAccounts.data?.map((_: any, index: number) => (
                 <CarouselItem className="h-60 grid " key={index}>
                     <Card className="place-self-center	 w-11/12 shadow-md rounded-xl flex aspect-[2/1] bg-gradient-to-r from-orange-100 from-5% to-orange-600 to-95%">
-                      <CardContent className="flex p-6 ">
-                        <span className="text-sm font-semibold">${_.balance.available?.toLocaleString()}</span>
+                      <CardContent className="flex p-6 w-full">
+                      <div className="flex flex-col w-full h-full justify-center">
+                          <span className="text-sm ">{_.name}</span>
+                          <span className="text-sm font-semibold">{_.number}</span>
+                        
+                          <span className="text-sm self-end ">Balance</span>
+                          <span className="text-sm font-semibold self-end ">${_.balance.available?.toLocaleString()}</span>
+                        </div>
                       </CardContent>
                     </Card>
                 </CarouselItem>
