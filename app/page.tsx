@@ -27,7 +27,7 @@ const formSchema = z.object({
 })
 
 export default function Login() {
-  const { createLink } = ApiLink()
+  const { createLink } = ApiLink(null)
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
