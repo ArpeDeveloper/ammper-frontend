@@ -2,6 +2,7 @@
 
 import { Transaction } from "@/lib/models/transaction"
 import { ColumnDef } from "@tanstack/react-table"
+import moment from "moment"
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -23,9 +24,7 @@ export const columns: ColumnDef<Transaction>[] = [
     header: "Date",
     cell: ({ row }) => {
       const value: string = row.getValue("accounting_date")
-      const date = new Date(value.substring(0,value.indexOf('T')))
- 
-      return <div className="text-left font-medium">{date.toLocaleDateString()}</div>
+      return <div className="text-left font-medium">{moment(value).format('DD-MM-YYYY')}</div>
     },
   },
   {

@@ -25,37 +25,33 @@ import { ApiAccounts } from "@/lib/services/accounts"
 import { ApiTransactions } from "@/lib/services/transactions"
 import { BubbleChart } from "@/components/transactions/bubbleChart"
 import Loading from "./loading"
+import { Transaction } from "@/lib/models/transaction"
+import TransactionsQuery from "@/components/transactions/transactionsQuery"
 
 export default function Home() {
     let linkId = null
     if (typeof window !== 'undefined') {
       linkId = window.localStorage.getItem('linkId')
     }
-    const apiLink = ApiLink(linkId)
-    const [dateFrom, setDateFrom] = useState('2023-11-01')
-    const [dateTo, setDateTo] = useState('2024-01-15')
     const [accountIdIndex, setAccountIdIndex] = useState(0)
-    
-    let apiAccounts = ApiAccounts(linkId)
     const [accountId, setAccountId] = useState(null)
-    const apiTransactions = ApiTransactions(linkId, accountId, dateFrom, dateTo)
-
-    const [api, setApi] = React.useState<CarouselApi>()
+    const [transactions, setTransactions] = useState<Array<Transaction> | undefined>(undefined)
+    ApiLink(linkId)
+    let apiAccounts = ApiAccounts(linkId)
+    const [api, setApi] = useState<CarouselApi>()
  
-    React.useEffect(() => {
+    useEffect(() => {
       if (!api) {
         return
       }
   
       api.on("select", (event) => {
-        console.log('cambio carrousel')
         const accountIndex = event.selectedScrollSnap()
         setAccountIdIndex(accountIndex)
       })
     }, [api])
 
-    React.useEffect(() => {  
-      console.log('cambio index o accounts data')    
+    useEffect(() => {  
         setAccountId(apiAccounts.data?.find((e:any,i:number) => i == accountIdIndex)?.id)
     }, [apiAccounts.data, accountIdIndex])
     
@@ -86,9 +82,11 @@ export default function Home() {
 
           <Separator className="my-4" />
 
+          <TransactionsQuery linkId={linkId} accountId={accountId} loadTransactions={setTransactions}></TransactionsQuery>
+
           {
-            apiTransactions.data ? 
-            (<DataTable columns={columns} data={apiTransactions.data ? apiTransactions.data : []} />)
+            transactions ? 
+            (<DataTable columns={columns} data={transactions ? transactions : []} />)
             : (<div className="h-full "><Loading textLoading="Loading transactions..." /></div>)
           }
         </div>
@@ -100,8 +98,8 @@ export default function Home() {
               <AccordionTrigger>Dispersion Chart</AccordionTrigger>
               <AccordionContent>
                 {
-                  apiTransactions.data ? 
-                  (<BubbleChart data={apiTransactions.data ? apiTransactions.data : []}></BubbleChart>)
+                  transactions ? 
+                  (<BubbleChart data={transactions ? transactions : []}></BubbleChart>)
                   : (<div className="h-60 "><Loading textLoading="Loading chart..." /></div>)
                 }
                   

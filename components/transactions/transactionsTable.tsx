@@ -6,10 +6,7 @@ import {
   getCoreRowModel,
   useReactTable,
   getPaginationRowModel,
-  ColumnFiltersState,
-  getFilteredRowModel,
 } from "@tanstack/react-table"
-
 import {
   Table,
   TableBody,
@@ -19,8 +16,9 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Button } from "../ui/button"
-import { Input } from "../ui/input"
 import React from "react"
+
+
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -31,31 +29,15 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      columnFilters,
-    },
   })
 
   return (
     <div>
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("accounting_date")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("accounting_date")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-      </div>
       <div className="shadow-md rounded-md border">
         <Table>
           <TableHeader>

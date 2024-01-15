@@ -27,7 +27,7 @@ const options: Highcharts.Options = {
       },
       gridLineWidth: 1,
       labels: {
-        format: '{value:%Y-%m-%d}'
+        format: '{value:%d-%m-%Y}'
       },
     },
     yAxis: {
@@ -47,7 +47,7 @@ const options: Highcharts.Options = {
         useHTML: true,
         headerFormat: '<table>',
         pointFormat: '<tr><th>Amount:</th><td>${point.y}</td></tr>' +
-            '<tr><th>Date:</th><td>{point.x:%Y-%m-%d}</td></tr>' +
+            '<tr><th>Date:</th><td>{point.x:%d-%m-%Y}</td></tr>' +
             '<tr><th>Status:</th><td>{point.status}</td></tr>',
         footerFormat: '</table>',
         followPointer: true
@@ -97,11 +97,11 @@ export function BubbleChart({data}: BubbleChartProps) {
     const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
     React.useEffect(() => {  
         const groups = groupBy(data, 'status');
-        let series = Array()
      
-        Object.keys(groups).forEach( (g: any) => {
-            chartComponentRef.current?.chart.series.find(s => s.name == g)?.setData(
-             groups[g].map( (_: any) => {
+        chartComponentRef.current?.chart.series.forEach( (g: any) => {
+            g.setData(
+                groups[g.name] ?
+                groups[g.name].map( (_: any) => {
                         const date2 = new Date(_.accounting_date.substring(0,_.accounting_date.indexOf('T')))
                         return {
                             x: date2.getTime(),
@@ -111,6 +111,8 @@ export function BubbleChart({data}: BubbleChartProps) {
                             date: date2.toLocaleDateString()
                         }
                     })
+                
+                : []
             )
         })
       }, [data])
