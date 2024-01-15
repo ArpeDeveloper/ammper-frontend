@@ -35,7 +35,10 @@ const options: Highcharts.Options = {
         text: 'Amount ($)'
       },
       labels: {
-            format: '${value:.2f}'
+            format: '${value:.2f}',
+            formatter: (event) => {
+                return event.value.toLocaleString()
+            }
         },
     },
     plotOptions: {
