@@ -24,9 +24,11 @@ import { ApiAccounts } from "@/lib/services/accounts"
 import { ApiTransactions } from "@/lib/services/transactions"
 import { BubbleChart } from "@/components/transactions/bubbleChart"
 
-const linkId = window.localStorage.getItem('linkId')
-
 export default function Home() {
+    let linkId = null
+    if (typeof window !== 'undefined') {
+      linkId = window.localStorage.getItem('linkId')
+    }
     const [dateFrom, setDateFrom] = useState('2023-12-01')
     const [dateTo, setDateTo] = useState('2024-01-14')
     const apiLink = ApiLink(linkId)
