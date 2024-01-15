@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import {
   Carousel,
+  CarouselApi,
   CarouselContent,
   CarouselItem,
   CarouselNext,
@@ -30,11 +31,33 @@ export default function Home() {
     if (typeof window !== 'undefined') {
       linkId = window.localStorage.getItem('linkId')
     }
+    const apiLink = ApiLink(linkId)
     const [dateFrom, setDateFrom] = useState('2023-11-01')
     const [dateTo, setDateTo] = useState('2024-01-15')
-    const apiLink = ApiLink(linkId)
-    let apiAccounts = ApiAccounts(apiLink.linkId ? apiLink.linkId : '')
-    const apiTransactions = ApiTransactions(apiLink.linkId ? apiLink.linkId : '', apiAccounts.data?.find(Boolean)?.id, dateFrom, dateTo)
+    const [accountIdIndex, setAccountIdIndex] = useState(0)
+    
+    let apiAccounts = ApiAccounts(linkId)
+    const [accountId, setAccountId] = useState(null)
+    const apiTransactions = ApiTransactions(linkId, accountId, dateFrom, dateTo)
+
+    const [api, setApi] = React.useState<CarouselApi>()
+ 
+    React.useEffect(() => {
+      if (!api) {
+        return
+      }
+  
+      api.on("select", (event) => {
+        console.log('cambio carrousel')
+        const accountIndex = event.selectedScrollSnap()
+        setAccountIdIndex(accountIndex)
+      })
+    }, [api])
+
+    React.useEffect(() => {  
+      console.log('cambio index o accounts data')    
+        setAccountId(apiAccounts.data?.find((e:any,i:number) => i == accountIdIndex)?.id)
+    }, [apiAccounts.data, accountIdIndex])
     
     return (
       <main className="grid gap-4 grid-cols-1 md:grid-cols-5 text-black p-8">
@@ -42,7 +65,7 @@ export default function Home() {
 
         {
         apiAccounts.data ? (
-          <Carousel className="h-60 ">
+          <Carousel className="h-60 " setApi={setApi}>
             <CarouselContent className="h-60 ">
               {apiAccounts.data?.map((_: any, index: number) => (
                 <CarouselItem className="h-60 grid " key={index}>

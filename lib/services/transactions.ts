@@ -2,10 +2,10 @@ import useSWR from 'swr'
 import axios from '@/lib/axios'
 import { useEffect, useState } from 'react'
 
-export const ApiTransactions = (linkId: String, accountId: String, dateFrom: String, dateTo: String) => {
+export const ApiTransactions = (linkId: String | null, accountId: String | null, dateFrom: String, dateTo: String) => {
     const [errors, setErrors] = useState([])
 
-    const {data, mutate} = useSWR('api/transactions/' + linkId + '/' + accountId + '/', () =>
+    const {data, mutate, isLoading} = useSWR('api/transactions/' + linkId + '/' + accountId + '/', () =>
         linkId && accountId ? axios
             .post('api/transactions/', {
                 link: linkId,
@@ -21,12 +21,15 @@ export const ApiTransactions = (linkId: String, accountId: String, dateFrom: Str
     )
 
     useEffect(() => {
-        mutate()
+        console.log('cambio accountId')
+        if(!isLoading)
+            mutate()
     }, [linkId, accountId, dateFrom, dateTo])
 
 
     return {
         data,
+        mutate,
         errors
     }
 }

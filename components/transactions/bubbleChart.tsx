@@ -5,6 +5,8 @@ import Highcharts from 'highcharts'
 import HighchartsExporting from 'highcharts/modules/exporting'
 import HighchartsReact from 'highcharts-react-official'
 import { useRef } from 'react'
+import React from 'react'
+import { Transaction } from '@/lib/models/transaction'
 
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts)
@@ -58,6 +60,22 @@ const options: Highcharts.Options = {
           }
       }
     },
+    series:[
+        {
+            type: "bubble",
+            colorKey: "status",
+            name: "PROCESSED",
+            color: "green",
+            data: []
+        },
+        {
+            type: "bubble",
+            colorKey: "status",
+            name: "PENDING",
+            color: "orange",
+            data: []
+        }
+    ]
 }
 
 function groupBy<T>(collection:T[],key: keyof T){
@@ -73,18 +91,17 @@ function groupBy<T>(collection:T[],key: keyof T){
       return groupedResult
   }
 
-export function BubbleChart(data: any) {
-    const groups = groupBy(data.data, 'status');
-    let series = Array()
+  type BubbleChartProps = { data: Array<Transaction>; };
+
+export function BubbleChart({data}: BubbleChartProps) {
+    const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
+    React.useEffect(() => {  
+        const groups = groupBy(data, 'status');
+        let series = Array()
      
         Object.keys(groups).forEach( (g: any) => {
-            series.push(
-             {
-                type: "bubble",
-                colorKey: 'status',
-                name: g,
-                color: g == "PROCESSED" ? "green" : "orange",
-                data: groups[g].map( (_: any) => {
+            chartComponentRef.current?.chart.series.find(s => s.name == g)?.setData(
+             groups[g].map( (_: any) => {
                         const date2 = new Date(_.accounting_date.substring(0,_.accounting_date.indexOf('T')))
                         return {
                             x: date2.getTime(),
@@ -94,10 +111,9 @@ export function BubbleChart(data: any) {
                             date: date2.toLocaleDateString()
                         }
                     })
-            })
-      })
-    options.series = series
-    const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
+            )
+        })
+      }, [data])
 
     return (
         <HighchartsReact

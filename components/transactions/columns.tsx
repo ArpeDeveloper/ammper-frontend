@@ -1,16 +1,10 @@
 "use client"
 
+import { Transaction } from "@/lib/models/transaction"
 import { ColumnDef } from "@tanstack/react-table"
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type Transaction = {
-  id: string
-  amount: number
-  status: "PENDING" | "PROCESSED"
-  accounting_date: string,
-  category: string,
-}
 
 export const columns: ColumnDef<Transaction>[] = [
   {

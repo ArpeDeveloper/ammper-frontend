@@ -1,5 +1,3 @@
-
-import useSWR from 'swr'
 import axios from '@/lib/axios'
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
@@ -10,15 +8,6 @@ export const ApiLink = (link: string | null) => {
     const [linkId, setLinkId] = useState<string | null>(link)
     const [errors, setErrors] = useState([])
     const [isLoading, setIsLoading] = useState(false)
-
-    const {data, error, mutate} =  useSWR('api/links/' + linkId + '/', () => linkId ?
-        axios
-            .get('api/links/' + linkId + '/')
-            .then(res => res.data)
-            .catch(error => {
-                throw error
-            }) : undefined
-    ) 
 
     
     const createLink = async ({...props }) => {
@@ -38,19 +27,13 @@ export const ApiLink = (link: string | null) => {
     }
 
     const destroyLink = async () => {
-        if (!error && linkId) {
-            await axios.delete('/api/links/' + linkId +'/').then(() => mutate())
+        if (linkId) {
+            await axios.delete('/api/links/' + linkId +'/').then(() => router.push('/'))
         }
         router.push('/')
     }
 
     useEffect(() => {
-        
-        if (pathname =='/' && typeof data != "undefined") {
-            window.localStorage.setItem('linkId', data.id)
-            router.push('home')
-            setIsLoading(false)
-        }
 
         if (pathname =='/' && linkId) {
             window.localStorage.setItem('linkId', linkId)
@@ -58,11 +41,10 @@ export const ApiLink = (link: string | null) => {
             setIsLoading(false)
         }
         
-        if ((pathname !='/' && error) || (pathname !='/' && !linkId)) destroyLink()
-    }, [data, linkId])
+        if (pathname !='/' && !linkId) destroyLink()
+    }, [linkId])
 
     return {
-        data,
         linkId,
         errors,
         isLoading,
