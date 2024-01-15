@@ -41,6 +41,15 @@ const options: Highcharts.Options = {
             }
         },
     },
+    tooltip: {
+        useHTML: true,
+        headerFormat: '<table>',
+        pointFormat: '<tr><th>Amount:</th><td>${point.y}</td></tr>' +
+            '<tr><th>Date:</th><td>{point.x:%Y-%m-%d}</td></tr>' +
+            '<tr><th>Status:</th><td>{point.status}</td></tr>',
+        footerFormat: '</table>',
+        followPointer: true
+    },
     plotOptions: {
       series: {
           dataLabels: {
@@ -52,21 +61,29 @@ const options: Highcharts.Options = {
 }
 
 export function BubbleChart(data: any) {
-    options.series = [{
-        type: "bubble",
-        colorKey: 'status',
-        data: data.data.map( (_: any) => {
-            const date2 = new Date(_.accounting_date.substr(0,_.accounting_date.indexOf('T')))
-            return {
-                x: date2.getTime(),
-                y: _.amount,
-                z: _.amount,
-                email: _.merchant.name,
-                date: date2.toLocaleDateString()
-            }
-        })
-      },
-    ]
+    const groups = Object.groupBy(data.data, (e: { status: string }) => e.status);
+    let series = Array()
+     
+        Object.keys(groups).forEach( (g: any) => {
+            series.push(
+             {
+                type: "bubble",
+                colorKey: 'status',
+                name: g,
+                color: g == "PROCESSED" ? "green" : "orange",
+                data: groups[g].map( (_: any) => {
+                        const date2 = new Date(_.accounting_date.substr(0,_.accounting_date.indexOf('T')))
+                        return {
+                            x: date2.getTime(),
+                            y: _.amount,
+                            z: _.amount,
+                            status: _.status,
+                            date: date2.toLocaleDateString()
+                        }
+                    })
+            })
+      })
+    options.series = series
     const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
 
     return (

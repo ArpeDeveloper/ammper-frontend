@@ -63,7 +63,7 @@ export default function Home() {
           <Separator orientation="vertical" />
           <Accordion className="px-6 w-full" type="single" collapsible>
             <AccordionItem value="item-1">
-              <AccordionTrigger>Is it accessible?</AccordionTrigger>
+              <AccordionTrigger>Dispersion Chart</AccordionTrigger>
               <AccordionContent>
                   <BubbleChart data={apiTransactions.data ? apiTransactions.data : []}></BubbleChart>
               </AccordionContent>
