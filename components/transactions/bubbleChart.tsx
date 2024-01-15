@@ -60,8 +60,21 @@ const options: Highcharts.Options = {
     },
 }
 
+function groupBy<T>(collection:T[],key: keyof T){
+    const groupedResult =  collection.reduce((previous,current)=>{
+ 
+    if(!previous[current[key]]){
+      previous[current[key]] = [] as T[];
+     }
+ 
+    previous[current[key]].push(current);
+           return previous;
+    },{} as any); // tried to figure this out, help!!!!!
+      return groupedResult
+  }
+
 export function BubbleChart(data: any) {
-    const groups = Object.groupBy(data.data, (e: { status: string }) => e.status);
+    const groups = groupBy(data.data, 'status');
     let series = Array()
      
         Object.keys(groups).forEach( (g: any) => {
