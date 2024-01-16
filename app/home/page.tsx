@@ -27,6 +27,7 @@ import { BubbleChart } from "@/components/transactions/bubbleChart"
 import Loading from "./loading"
 import { Transaction } from "@/lib/models/transaction"
 import TransactionsQuery from "@/components/transactions/transactionsQuery"
+import { ColumnChart } from "@/components/transactions/columnChart"
 
 export default function Home() {
     let linkId = null
@@ -99,13 +100,24 @@ export default function Home() {
         
         <div className="col-span-3 flex">
           <Separator orientation="vertical" />
-          <Accordion className="px-6 w-full" type="single" collapsible>
+          <Accordion className="px-6 w-full" type="single" collapsible defaultValue='item-1'>
             <AccordionItem value="item-1">
-              <AccordionTrigger>Dispersion Chart</AccordionTrigger>
+              <AccordionTrigger>Dispersion Diagram</AccordionTrigger>
               <AccordionContent>
                 {
                   transactions ? 
                   (<BubbleChart data={transactions ? transactions : []}></BubbleChart>)
+                  : (<div className="h-60 "><Loading textLoading="Loading chart..." /></div>)
+                }
+                  
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+              <AccordionTrigger>Comparative Histogram</AccordionTrigger>
+              <AccordionContent>
+                {
+                  transactions ? 
+                  (<ColumnChart data={transactions ? transactions : []}></ColumnChart>)
                   : (<div className="h-60 "><Loading textLoading="Loading chart..." /></div>)
                 }
                   
