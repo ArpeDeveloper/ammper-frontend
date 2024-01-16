@@ -29,6 +29,7 @@ import { Transaction } from "@/lib/models/transaction"
 import TransactionsQuery from "@/components/transactions/transactionsQuery"
 import { ColumnChart } from "@/components/transactions/columnChart"
 import { PieChart } from "@/components/transactions/pieChart"
+import { GeneralColumnChart } from "@/components/transactions/generalColumnChart"
 
 export default function Home() {
   let linkId = null
@@ -125,14 +126,20 @@ export default function Home() {
             </AccordionItem>
 
             <AccordionItem value="item-3">
-              <AccordionTrigger>Expenses by Categories</AccordionTrigger>
+              <AccordionTrigger>Other charts</AccordionTrigger>
               <AccordionContent>
+                <div className="flex flex-row gap-4">
+                {
+                  transactions ? 
+                  (<GeneralColumnChart data={transactions ? transactions : []}></GeneralColumnChart>)
+                  : (<div className="h-60 "><Loading textLoading="Loading chart..." /></div>)
+                }
                 {
                   transactions ? 
                   (<PieChart data={transactions ? transactions : []}></PieChart>)
                   : (<div className="h-60 "><Loading textLoading="Loading chart..." /></div>)
                 }
-                  
+                </div>
               </AccordionContent>
             </AccordionItem>
           </Accordion>

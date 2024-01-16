@@ -4,4 +4,5 @@ export type Transaction = {
     status: "PENDING" | "PROCESSED"
     accounting_date: string,
     category: string,
+    type: string,
   }

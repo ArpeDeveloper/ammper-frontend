@@ -1,6 +1,7 @@
 "use client"
 
 import { Transaction } from "@/lib/models/transaction"
+import { cn } from "@/lib/utils"
 import { ClockIcon, CheckCircleIcon } from "@heroicons/react/24/outline"
 import { ColumnDef } from "@tanstack/react-table"
 import moment from "moment"
@@ -32,13 +33,18 @@ export const columns: ColumnDef<Transaction>[] = [
     accessorKey: "amount",
     header: "Amount",
     cell: ({ row }) => {
+      const type = row.getValue("type")
       const amount = parseFloat(row.getValue("amount"))
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
       }).format(amount)
  
-      return <div className="text-right font-medium">{formatted}</div>
+      return <div className={cn("text-right font-medium", type == 'INFLOW' && 'text-green-500', type == 'OUTFLOW' && 'text-red-500')}>{formatted}</div>
     },
   },
+  {
+    accessorKey: "type",
+    header: "Type",
+  }
 ]

@@ -6,6 +6,7 @@ import {
   getCoreRowModel,
   useReactTable,
   getPaginationRowModel,
+  VisibilityState
 } from "@tanstack/react-table"
 import {
   Table,
@@ -29,12 +30,21 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({})
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    state: {
+      columnVisibility,
+    }
   })
+  
+  if (table.getColumn('type')?.getIsVisible())
+    table.getColumn('type')?.toggleVisibility(false)
 
   return (
     <div>
