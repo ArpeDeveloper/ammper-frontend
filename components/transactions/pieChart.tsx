@@ -63,7 +63,7 @@ export function PieChart({data}: PieChartProps) {
         })
 
         const groups = groupBy(data, 'category');
-        const categories = Object.keys(groups)
+        const categories = Object.keys(groups).sort()
 
         const series = categories.map((c: string) => {
             let total = 0

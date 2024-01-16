@@ -1,8 +1,20 @@
 export type Transaction = {
-    id: string
-    amount: number
-    status: "PENDING" | "PROCESSED"
+    account: any,
     accounting_date: string,
-    category: string,
+    amount: number,
+    balance: number,
+    category: string | null,
+    collected_at: string,
+    created_at: string,
+    currency: string,
+    description: string,
+    id: string,
+    internal_identification: string,
+    merchant: any,
+    observations: string | null,
+    reference: string,
+    status: "PENDING" | "PROCESSED",
+    subcategory: string | null,
     type: string,
+    value_date: string,
   }

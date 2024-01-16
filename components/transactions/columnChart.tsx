@@ -72,7 +72,7 @@ export function ColumnChart({data}: ColumnChartProps) {
     const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
     React.useEffect(() => {  
         const groups = groupBy(data, 'category');
-        const categories = Object.keys(groups)
+        const categories = Object.keys(groups).sort()
         chartComponentRef.current?.chart.update({
             xAxis: {
                 categories: categories,

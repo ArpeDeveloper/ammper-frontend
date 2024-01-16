@@ -27,6 +27,7 @@ export default function TransactionsQuery({linkId, accountId, loadTransactions}:
     date3MonthsBefore.setMonth(date3MonthsBefore.getMonth() - 3);
     const [dateRange, setDateRange] = useState<DateRange>({from: date3MonthsBefore, to: todayDate})
     const [categories, setCategories] = useState<Category[]>([])
+    let dataTransactions: Transaction[] = []
   
     const apiTransactions = ApiTransactions(
         linkId, 
@@ -38,17 +39,32 @@ export default function TransactionsQuery({linkId, accountId, loadTransactions}:
     const selectCategory = (key: string, value: boolean) =>{
         const cat: Category[] = categories.map((c) =>  key == c.id ? {id: c.id, name: c.name, selected: value} : c)
         setCategories(cat)
+        filterTransactions(apiTransactions.data, cat)
+    }
+
+    const filterTransactions = (t: Transaction[], cat: Category[]) =>{
+        const selectedCategories = cat.filter(c => c.selected)
+        const filteredTransactions = t.filter(
+          _ => selectedCategories.findIndex(c => c.id == (_.category ? _.category.toLowerCase() : "null")) > -1
+        )
+        dataTransactions = filteredTransactions
+        loadTransactions(dataTransactions)
     }
 
     useEffect(() => {  
-        loadTransactions(apiTransactions.data)
+        
         if(apiTransactions.data)
         {
-            const groups = groupBy(apiTransactions.data, 'category')
-            const cat: Category[] = Object.keys(groups).map((c) => {
-                    return {id: c.toLowerCase(), name: c, selected: false}
+            const dataCopy = apiTransactions.data.sort((a: Transaction,b: Transaction) => b.value_date > a.value_date).map((d: Transaction) => d)
+            dataTransactions = dataCopy
+            const groups = groupBy(dataCopy, 'category')
+            const cat: Category[] = Object.keys(groups).sort().map((c) => {
+                    const categoryName = c == "null" ? "Other" : c
+                    const cat = categories.find(ca => ca.id == c.toLowerCase())
+                    return {id: c.toLowerCase(), name: categoryName, selected: cat ? cat.selected : true}
                 })
             setCategories(cat)
+            filterTransactions(dataCopy, cat)
         }
     }, [apiTransactions.data])
     

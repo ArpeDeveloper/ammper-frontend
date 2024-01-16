@@ -28,7 +28,8 @@ const options: Highcharts.Options = {
       },
       gridLineWidth: 1,
       labels: {
-        format: '{value:%d-%m-%Y}'
+        format: '{value:%d-%m-%Y}',
+        rotation: 45
       },
     },
     yAxis: {
@@ -90,7 +91,7 @@ export function BubbleChart({data}: BubbleChartProps) {
             g.setData(
                 groups[g.name] ?
                 groups[g.name].map( (_: any) => {
-                        const date2 = new Date(_.accounting_date.substring(0,_.accounting_date.indexOf('T')))
+                        const date2 = new Date(_.value_date)
                         return {
                             x: date2.getTime(),
                             y: _.amount,

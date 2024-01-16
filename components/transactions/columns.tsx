@@ -22,10 +22,10 @@ export const columns: ColumnDef<Transaction>[] = [
     },
   },
   {
-    accessorKey: "accounting_date",
+    accessorKey: "value_date",
     header: "Date",
     cell: ({ row }) => {
-      const value: string = row.getValue("accounting_date")
+      const value: string = row.getValue("value_date")
       return <div className="text-left font-medium">{moment(value).format('DD-MM-YYYY')}</div>
     },
   },
