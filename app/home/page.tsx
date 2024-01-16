@@ -28,6 +28,7 @@ import Loading from "./loading"
 import { Transaction } from "@/lib/models/transaction"
 import TransactionsQuery from "@/components/transactions/transactionsQuery"
 import { ColumnChart } from "@/components/transactions/columnChart"
+import { PieChart } from "@/components/transactions/pieChart"
 
 export default function Home() {
   let linkId = null
@@ -117,6 +118,18 @@ export default function Home() {
                 {
                   transactions ? 
                   (<ColumnChart data={transactions ? transactions : []}></ColumnChart>)
+                  : (<div className="h-60 "><Loading textLoading="Loading chart..." /></div>)
+                }
+                  
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-3">
+              <AccordionTrigger>Expenses by Categories</AccordionTrigger>
+              <AccordionContent>
+                {
+                  transactions ? 
+                  (<PieChart data={transactions ? transactions : []}></PieChart>)
                   : (<div className="h-60 "><Loading textLoading="Loading chart..." /></div>)
                 }
                   
