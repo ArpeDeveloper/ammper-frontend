@@ -128,7 +128,7 @@ export default function Home() {
             <AccordionItem value="item-3">
               <AccordionTrigger>Other charts</AccordionTrigger>
               <AccordionContent>
-                <div className="flex flex-row gap-4">
+                <div className="flex flex-col md:flex-row gap-4">
                 {
                   transactions ? 
                   (<GeneralColumnChart data={transactions ? transactions : []}></GeneralColumnChart>)
