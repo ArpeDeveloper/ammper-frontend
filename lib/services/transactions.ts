@@ -21,7 +21,6 @@ export const ApiTransactions = (linkId: String | null, accountId: String | null,
     )
 
     useEffect(() => {
-        console.log('cambio accountId')
         if(!isLoading)
             mutate()
     }, [linkId, accountId, dateFrom, dateTo])

@@ -99,12 +99,10 @@ export function ColumnChart({data}: ColumnChartProps) {
             const data = categories.map((c: string) => {
                 let total = 0
                 groups[c].forEach( (_: any) => {
-                    console.log()
                     total += _.type.toLowerCase() == g.name.toLowerCase() ? _.amount : 0
                 })
                 return total
             })
-            console.log(data)
             g.setData(
                 data
             )

@@ -28,16 +28,17 @@ import Loading from "./loading"
 import { Transaction } from "@/lib/models/transaction"
 import TransactionsQuery from "@/components/transactions/transactionsQuery"
 import { ColumnChart } from "@/components/transactions/columnChart"
+import { useRouter } from "next/navigation"
 
 export default function Home() {
-    let linkId = null
-    if (typeof window !== 'undefined') {
-      linkId = window.localStorage.getItem('linkId')
-    }
+  const router = useRouter()
+  let linkId = typeof window !== 'undefined' ? window.localStorage.getItem('linkId') : null
+  if (!linkId)
+      return 'Not Authorized'
+    ApiLink(linkId)
     const [accountIdIndex, setAccountIdIndex] = useState(0)
     const [accountId, setAccountId] = useState(null)
     const [transactions, setTransactions] = useState<Array<Transaction> | undefined>(undefined)
-    ApiLink(linkId)
     let apiAccounts = ApiAccounts(linkId)
     const [api, setApi] = useState<CarouselApi>()
  

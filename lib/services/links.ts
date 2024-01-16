@@ -8,7 +8,6 @@ export const ApiLink = (link: string | null) => {
     const [linkId, setLinkId] = useState<string | null>(link)
     const [errors, setErrors] = useState([])
     const [isLoading, setIsLoading] = useState(false)
-
     
     const createLink = async ({...props }) => {
 
@@ -27,21 +26,26 @@ export const ApiLink = (link: string | null) => {
     }
 
     const destroyLink = async () => {
+        setIsLoading(true)
         if (linkId) {
-            await axios.delete('/api/links/' + linkId +'/').then(() => router.push('/'))
+            await axios.delete('/api/links/' + linkId +'/').finally(() => {
+                setLinkId(null)
+            })
         }
-        router.push('/')
     }
 
     useEffect(() => {
-
         if (pathname =='/' && linkId) {
             window.localStorage.setItem('linkId', linkId)
             router.push('home')
-            setIsLoading(false)
         }
         
-        if (pathname !='/' && !linkId) destroyLink()
+        if (pathname !='/' && !linkId) {
+            destroyLink()
+            window.localStorage.removeItem('linkId')
+            router.push('/')
+        }
+       
     }, [linkId])
 
     return {
