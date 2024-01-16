@@ -17,7 +17,7 @@ if (typeof Highcharts === 'object') {
 const options: Highcharts.Options = {
     chart: {
         type: 'bubble',
-        plotBorderWidth: 1,
+        plotBorderWidth: 2,
     },
     title: {
         text: 'Amount of transactions by date'
@@ -35,6 +35,7 @@ const options: Highcharts.Options = {
     yAxis: {
       startOnTick: false,
       endOnTick: false,
+      tickInterval: 200,
       title: {
         text: 'Amount ($)'
       },
@@ -42,7 +43,7 @@ const options: Highcharts.Options = {
             format: '${value:.2f}',
             formatter: (event) => {
                 return event.value.toLocaleString()
-            }
+            },
         },
     },
     tooltip: {
@@ -63,20 +64,6 @@ const options: Highcharts.Options = {
       }
     },
     series:[
-        {
-            type: "bubble",
-            colorKey: "status",
-            name: "PROCESSED",
-            color: "green",
-            data: []
-        },
-        {
-            type: "bubble",
-            colorKey: "status",
-            name: "PENDING",
-            color: "orange",
-            data: []
-        }
     ]
 }
 
@@ -85,7 +72,42 @@ const options: Highcharts.Options = {
 export function BubbleChart({data}: BubbleChartProps) {
     const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
     React.useEffect(() => {  
-        const groups = groupBy(data, 'status');
+        const groups = groupBy(data, 'category');
+        const categories = Object.keys(groups).sort()
+        chartComponentRef.current?.chart.series.forEach(s => {
+            const name = s.name == "Other" ? "null" : s.name
+            if(categories.indexOf(name) < 0) s.remove()
+        })
+         categories.forEach( (c: string) => {
+            const name = c == "null" ? "Other" : c
+            const seriesFound = chartComponentRef.current?.chart.series.find(s => s.name == name)
+            const serie:any = {
+                type: "bubble",
+                colorKey: "category",
+                name: name,
+                data: groups[c].map( (_: any) => {
+                    const date2 = new Date(_.value_date)
+                    return {
+                        x: date2.getTime(),
+                        y: _.amount,
+                        z: _.amount,
+                        category: _.category,
+                        status: _.status,
+                        date: date2.toLocaleDateString()
+                    }
+                })
+            }
+            if(seriesFound)
+                seriesFound.setData(serie.data)
+            else
+                chartComponentRef.current?.chart.addSeries(serie, false)
+            
+        })
+    
+        chartComponentRef.current?.chart.redraw()
+
+
+        /*const groups = groupBy(data, 'status');
      
         chartComponentRef.current?.chart.series.forEach( (g: any) => {
             g.setData(
@@ -103,7 +125,7 @@ export function BubbleChart({data}: BubbleChartProps) {
                 
                 : []
             )
-        })
+        })*/
       }, [data])
 
     return (

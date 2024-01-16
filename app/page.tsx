@@ -1,6 +1,5 @@
 "use client"
 
-import Link from 'next/link' 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -100,14 +99,11 @@ export default function Login() {
               )}
             />
           </div>
-          <button disabled={apiLink.isLoading} type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full w-full">
+          <Button disabled={apiLink.isLoading} type="submit" className="py-2 px-4 w-full bg-orange-300 hover:bg-orange-500 text-white font-bold rounded-full">
             {apiLink.isLoading ? <ArrowPathIcon className=" animate-spin w-full h-6"/> : "Login"}
-          </button>
+          </Button>
         </form>
-      </Form>
-      
-      <Link href="/home" className="text-sm text-gray-700 underline">Login</Link>
-      
+      </Form>      
     </main>
   )
 }
