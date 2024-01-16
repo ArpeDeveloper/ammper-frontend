@@ -31,7 +31,7 @@ const options: Highcharts.Options = {
     yAxis: {
         min: 0,
         title: {
-            text: 'Amount ($)'
+            text: 'Amount'
         },
         labels: {
             format: '${value:.2f}',

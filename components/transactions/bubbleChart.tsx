@@ -35,14 +35,14 @@ const options: Highcharts.Options = {
     yAxis: {
       startOnTick: false,
       endOnTick: false,
-      tickInterval: 200,
+      tickPixelInterval: 50,
       title: {
-        text: 'Amount ($)'
+        text: 'Amount'
       },
       labels: {
             format: '${value:.2f}',
             formatter: (event) => {
-                return event.value.toLocaleString()
+                return "$" +event.value.toLocaleString()
             },
         },
     },
@@ -54,14 +54,6 @@ const options: Highcharts.Options = {
             '<tr><th>Status:</th><td>{point.status}</td></tr>',
         footerFormat: '</table>',
         followPointer: true
-    },
-    plotOptions: {
-      series: {
-          dataLabels: {
-              enabled: true,
-              format: '${point.y:.2f}'
-          }
-      }
     },
     series:[
     ]
