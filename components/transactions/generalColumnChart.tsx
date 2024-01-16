@@ -7,6 +7,7 @@ import HighchartsReact from 'highcharts-react-official'
 import { useRef } from 'react'
 import React from 'react'
 import { Transaction } from '@/lib/models/transaction'
+import { groupBy } from '@/lib/utils'
 
 if (typeof Highcharts === 'object') {
     HighchartsExporting(Highcharts)
@@ -61,19 +62,6 @@ const options: Highcharts.Options = {
         }
     ]
 }
-
-function groupBy<T>(collection:T[],key: keyof T){
-    const groupedResult =  collection.reduce((previous,current)=>{
- 
-    if(!previous[current[key]]){
-      previous[current[key]] = [] as T[];
-     }
- 
-    previous[current[key]].push(current);
-           return previous;
-    },{} as any); // tried to figure this out, help!!!!!
-      return groupedResult
-  }
 
   type GeneralColumnChartProps = { data: Array<Transaction>; };
 
