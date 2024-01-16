@@ -28,13 +28,11 @@ import Loading from "./loading"
 import { Transaction } from "@/lib/models/transaction"
 import TransactionsQuery from "@/components/transactions/transactionsQuery"
 import { ColumnChart } from "@/components/transactions/columnChart"
-import { useRouter } from "next/navigation"
 
 export default function Home() {
-  const router = useRouter()
-  let linkId = typeof window !== 'undefined' ? window.localStorage.getItem('linkId') : null
-  if (!linkId)
-      return 'Not Authorized'
+  let linkId = null
+  if (typeof window !== 'undefined')
+    linkId = window.localStorage.getItem('linkId')
     ApiLink(linkId)
     const [accountIdIndex, setAccountIdIndex] = useState(0)
     const [accountId, setAccountId] = useState(null)
@@ -103,7 +101,7 @@ export default function Home() {
           <Separator orientation="vertical" />
           <Accordion className="px-6 w-full" type="single" collapsible defaultValue='item-1'>
             <AccordionItem value="item-1">
-              <AccordionTrigger>Dispersion Diagram</AccordionTrigger>
+              <AccordionTrigger>Amount of Transactions by Date</AccordionTrigger>
               <AccordionContent>
                 {
                   transactions ? 
@@ -114,7 +112,7 @@ export default function Home() {
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
-              <AccordionTrigger>Comparative Histogram</AccordionTrigger>
+              <AccordionTrigger>Inflow vs Outflow by Categories</AccordionTrigger>
               <AccordionContent>
                 {
                   transactions ? 

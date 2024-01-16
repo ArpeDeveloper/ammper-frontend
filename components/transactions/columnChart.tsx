@@ -18,7 +18,7 @@ const options: Highcharts.Options = {
         type: 'column'
     },
     title: {
-        text: 'Inflow vs outflow transactions by categories',
+        text: 'Inflow vs outflow by categories',
     },
     xAxis: {
         categories: [],
